@@ -35,4 +35,4 @@ COPY --from=prod-deps /usr/src/app/packages/shared /usr/src/app/packages/shared
 COPY --from=builder /usr/src/app/apps/jwks-service/dist ./dist
 
 EXPOSE 3100
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/server.mjs"]

@@ -1,3 +1,4 @@
+import crypto from 'crypto'
 import type { FastifyInstance } from 'fastify'
 import { z } from 'zod'
 import type { AppConfig } from '../config.js'
@@ -22,9 +23,27 @@ export const registerTokenRoute = (
 ): void => {
   app.post('/token', async (request, reply) => {
     if (config.tokenApiKey) {
-      const providedKey = request.headers['x-api-key']
+      const rawHeader = request.headers['x-api-key']
+      const providedKey = Array.isArray(rawHeader) ? rawHeader[0] : rawHeader
 
-      if (providedKey !== config.tokenApiKey) {
+      // Use a timing-safe comparison to avoid leaking API key validity via response timing.
+      // Hash both values to a fixed length and compare digests with crypto.timingSafeEqual.
+      const providedDigest = crypto
+        .createHash('sha256')
+        .update(providedKey ?? '')
+        .digest()
+      const expectedDigest = crypto.createHash('sha256').update(config.tokenApiKey).digest()
+
+      let authorized = false
+      try {
+        authorized = crypto.timingSafeEqual(providedDigest, expectedDigest)
+      } catch (e) {
+        // timingSafeEqual throws if buffers are of different lengths; hashes are same length so shouldn't occur,
+        // but defensively treat as unauthorized on error.
+        authorized = false
+      }
+
+      if (!authorized) {
         reply.code(401)
         return { error: 'Unauthorized' }
       }
