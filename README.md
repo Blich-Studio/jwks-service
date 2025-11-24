@@ -20,7 +20,7 @@ Fastify service that issues RS256 tokens and exposes a JWKS endpoint so downstre
 
 ```bash
 cd apps/jwks-service
-npm install
+bun install
 ```
 
 ## Environment Variables
@@ -45,20 +45,20 @@ Reference `.env.example` and set the variables below. Multiline PEM values can k
 ## Running Locally
 
 ```bash
-# Watch mode with tsx
-npm run start:dev
+# Watch mode with Vite Node
+bun run dev
 
-# Type-check and emit to dist/
-npm run build
+# Type-check and emit optimized ESM bundle via Vite
+bun run build
 
-# Start compiled build
-npm start
+# Run the compiled output (same command works for preview)
+bun run start
 
 # Lint sources
-npm run lint
+bun run lint
 
 # Run unit/integration tests
-npm run test
+bun run test
 ```
 
 Verify the service is up:
