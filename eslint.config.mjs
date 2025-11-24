@@ -1,6 +1,6 @@
-import { base } from '@blich-studio/eslint-config'
+import { defineSharedConfig } from '@blich-studio/eslint-config'
 
-export default base({
+export default defineSharedConfig({
   languageOptions: {
     parserOptions: {
       project: ['./tsconfig.json', './tsconfig.vitest.json'],

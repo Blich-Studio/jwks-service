@@ -12,6 +12,7 @@
     "build": "vite build",
     "start": "node dist/server.mjs",
     "preview": "node dist/server.mjs",
+    "typecheck": "tsc --project tsconfig.json --noEmit",
     "lint": "eslint \"src/**/*.ts\" \"tests/**/*.ts\"",
     "lint:fix": "eslint \"src/**/*.ts\" \"tests/**/*.ts\" --fix",
     "test": "vitest run",

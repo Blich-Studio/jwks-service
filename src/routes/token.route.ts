@@ -37,7 +37,7 @@ export const registerTokenRoute = (
       let authorized = false
       try {
         authorized = crypto.timingSafeEqual(providedDigest, expectedDigest)
-      } catch (e) {
+      } catch (_err) {
         // timingSafeEqual throws if buffers are of different lengths; hashes are same length so shouldn't occur,
         // but defensively treat as unauthorized on error.
         authorized = false

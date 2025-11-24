@@ -33,8 +33,7 @@ export const loadConfig = (): AppConfig => {
   const result = BaseSchema.safeParse(process.env)
 
   if (!result.success) {
-    const firstIssue =
-      result.error.issues && result.error.issues.length > 0 ? result.error.issues[0] : undefined
+    const firstIssue = result.error.issues.length > 0 ? result.error.issues[0] : undefined
     const path = firstIssue?.path ?? []
     const message = firstIssue?.message ?? 'Invalid environment configuration'
     throw new MissingEnvironmentVariableError(`${path.join('.')}: ${message}`, CONTEXT)
