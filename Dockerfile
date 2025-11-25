@@ -4,6 +4,10 @@ FROM oven/bun:1.1.29 AS builder
 WORKDIR /usr/src/app
 ENV NODE_ENV=development
 
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends python3 build-essential \
+	&& rm -rf /var/lib/apt/lists/*
+
 COPY package.json bun.lock ./
 COPY turbo.json ./
 COPY apps ./apps
@@ -16,6 +20,10 @@ RUN bun --cwd apps/jwks-service run build
 FROM oven/bun:1.1.29 AS prod-deps
 WORKDIR /usr/src/app
 ENV NODE_ENV=production
+
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends python3 build-essential \
+	&& rm -rf /var/lib/apt/lists/*
 
 COPY package.json bun.lock ./
 COPY apps/jwks-service/package.json ./apps/jwks-service/
