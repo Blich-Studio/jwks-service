@@ -13,7 +13,9 @@ COPY turbo.json ./
 COPY apps ./apps
 COPY packages ./packages
 
-RUN bun install --frozen-lockfile
+RUN bun install --frozen-lockfile \
+	--filter=apps/jwks-service \
+	--filter=packages/shared
 RUN bun --cwd packages/shared run build
 RUN bun --cwd apps/jwks-service run build
 
@@ -30,7 +32,9 @@ COPY apps/jwks-service/package.json ./apps/jwks-service/
 COPY packages/shared/package.json ./packages/shared/
 COPY --from=builder /usr/src/app/packages/shared/dist ./packages/shared/dist
 
-RUN bun install --frozen-lockfile --production
+RUN bun install --frozen-lockfile --production \
+	--filter=apps/jwks-service \
+	--filter=packages/shared
 
 FROM node:20-slim AS runner
 WORKDIR /usr/src/app/apps/jwks-service
