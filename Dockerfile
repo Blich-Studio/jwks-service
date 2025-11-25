@@ -4,7 +4,7 @@ FROM oven/bun:1.1.29 AS builder
 WORKDIR /usr/src/app
 ENV NODE_ENV=development
 
-COPY package.json bun.lockb ./
+COPY package.json bun.lock ./
 COPY turbo.json ./
 COPY apps ./apps
 COPY packages ./packages
@@ -17,7 +17,7 @@ FROM oven/bun:1.1.29 AS prod-deps
 WORKDIR /usr/src/app
 ENV NODE_ENV=production
 
-COPY package.json bun.lockb ./
+COPY package.json bun.lock ./
 COPY apps/jwks-service/package.json ./apps/jwks-service/
 COPY packages/shared/package.json ./packages/shared/
 COPY --from=builder /usr/src/app/packages/shared/dist ./packages/shared/dist
