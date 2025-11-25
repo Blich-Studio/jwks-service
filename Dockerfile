@@ -10,14 +10,14 @@ RUN apt-get update \
 
 COPY package.json bun.lock ./
 COPY turbo.json ./
-COPY apps ./apps
-COPY packages ./packages
+COPY apps/jwks-service ./apps/jwks-service
+COPY packages/shared ./packages/shared
 
 RUN bun install --frozen-lockfile \
 	--filter=apps/jwks-service \
 	--filter=packages/shared
-RUN bun --cwd packages/shared run build
-RUN bun --cwd apps/jwks-service run build
+RUN bun run --cwd packages/shared build
+RUN bun run --cwd apps/jwks-service build
 
 FROM oven/bun:1.1.29 AS prod-deps
 WORKDIR /usr/src/app

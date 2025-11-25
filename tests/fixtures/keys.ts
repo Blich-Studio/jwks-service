@@ -1,3 +1,5 @@
+// Static PEM fixtures used only by test suites to avoid hitting Secret Manager.
+// DO NOT reuse these keys outside automated tests.
 export const PRIVATE_KEY = `-----BEGIN PRIVATE KEY-----
 MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDegf0KwVS7/A2p
 m6c+ZPh6gnli8FXv2hyTyflI74wjnkS2f8k5/TGE7ueqJtYc27D3WjBGJbhW5hdb
