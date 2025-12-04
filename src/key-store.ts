@@ -1,5 +1,6 @@
+import crypto from 'crypto'
 import type { JWK, KeyLike } from 'jose'
-import { exportJWK, importPKCS8, importSPKI, SignJWT } from 'jose'
+import { importPKCS8, SignJWT } from 'jose'
 import type { AppConfig } from './config.js'
 import type { PrivateKeyProvider } from './secret-manager.js'
 import type { TokenRequest } from './types.js'
@@ -16,12 +17,14 @@ export class KeyStore {
 
   async initialize(): Promise<void> {
     const privateKeyPem = await this.keyProvider.getPrivateKeyPem()
-    const publicKeyPem = this.getPublicKeyPem()
 
-    const importedPrivate = await importPKCS8(privateKeyPem, 'RS256')
-    const importedPublic = await importSPKI(publicKeyPem, 'RS256')
-    this.privateKey = importedPrivate
-    const jwk = await exportJWK(importedPublic)
+    // Import private key for signing
+    this.privateKey = await importPKCS8(privateKeyPem, 'RS256')
+    
+    // Extract public key from private key and convert to JWK
+    const privateKey = crypto.createPrivateKey(privateKeyPem)
+    const publicKey = crypto.createPublicKey(privateKey)
+    const jwk = publicKey.export({ format: 'jwk' }) as JWK
 
     this.publicJwk = {
       ...jwk,
@@ -60,11 +63,4 @@ export class KeyStore {
     return { keys: [this.publicJwk] }
   }
 
-  private getPublicKeyPem(): string {
-    if (this.config.localPublicKey) {
-      return this.config.localPublicKey
-    }
-
-    throw new Error('LOCAL_PUBLIC_KEY must be provided when using Secret Manager')
-  }
 }

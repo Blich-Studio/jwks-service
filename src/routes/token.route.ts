@@ -26,6 +26,14 @@ export const registerTokenRoute = (
       const rawHeader = request.headers['x-api-key']
       const providedKey = Array.isArray(rawHeader) ? rawHeader[0] : rawHeader
 
+      // DEBUG logging
+      app.log.info({
+        hasTokenApiKey: !!config.tokenApiKey,
+        tokenApiKeyLength: config.tokenApiKey?.length,
+        hasProvidedKey: !!providedKey,
+        providedKeyLength: providedKey?.length,
+      })
+
       // Use a timing-safe comparison to avoid leaking API key validity via response timing.
       // Hash both values to a fixed length and compare digests with crypto.timingSafeEqual.
       const providedDigest = crypto
@@ -42,6 +50,8 @@ export const registerTokenRoute = (
         // but defensively treat as unauthorized on error.
         authorized = false
       }
+
+      app.log.info({ authorized })
 
       if (!authorized) {
         reply.code(401)

@@ -1,5 +1,11 @@
-import { MissingEnvironmentVariableError } from '@blich-studio/shared'
 import { z } from 'zod'
+
+class MissingEnvironmentVariableError extends Error {
+  constructor(message: string, context?: string) {
+    super(context ? `[${context}] ${message}` : message)
+    this.name = 'MissingEnvironmentVariableError'
+  }
+}
 
 const BaseSchema = z.object({
   PORT: z.coerce.number().default(3100),
@@ -52,9 +58,9 @@ export const loadConfig = (): AppConfig => {
     LOCAL_PUBLIC_KEY,
   } = result.data
 
-  if (!GOOGLE_PRIVATE_KEY_SECRET && (!LOCAL_PRIVATE_KEY || !LOCAL_PUBLIC_KEY)) {
+  if (!GOOGLE_PRIVATE_KEY_SECRET && !LOCAL_PRIVATE_KEY) {
     throw new MissingEnvironmentVariableError(
-      'GOOGLE_PRIVATE_KEY_SECRET or both LOCAL_PRIVATE_KEY/LOCAL_PUBLIC_KEY must be provided',
+      'GOOGLE_PRIVATE_KEY_SECRET or LOCAL_PRIVATE_KEY must be provided',
       CONTEXT
     )
   }

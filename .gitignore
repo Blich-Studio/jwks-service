@@ -49,6 +49,7 @@ temp/
 private-key.pem
 public-key.pem
 jwks-api-key.txt
+api-key.txt
 
 # Google Cloud
 .gcloudignore

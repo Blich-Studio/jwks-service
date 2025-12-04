@@ -8,8 +8,8 @@ steps:
       - |
         docker build \
           --build-arg NPM_TOKEN="$$NPM_TOKEN" \
-          -t gcr.io/$PROJECT_ID/jwks-service:$BUILD_ID \
-          -t gcr.io/$PROJECT_ID/jwks-service:latest \
+          -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/blich-studio/jwks-service:$BUILD_ID \
+          -t ${_REGION}-docker.pkg.dev/$PROJECT_ID/blich-studio/jwks-service:latest \
           -f Dockerfile \
           .
 
@@ -17,12 +17,12 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'push'
-      - 'gcr.io/$PROJECT_ID/jwks-service:$BUILD_ID'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/blich-studio/jwks-service:$BUILD_ID'
 
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'push'
-      - 'gcr.io/$PROJECT_ID/jwks-service:latest'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/blich-studio/jwks-service:latest'
 
   # Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -32,7 +32,7 @@ steps:
       - 'deploy'
       - 'jwks-service'
       - '--image'
-      - 'gcr.io/$PROJECT_ID/jwks-service:latest'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/blich-studio/jwks-service:latest'
       - '--region'
       - '${_REGION}'
       - '--platform'
@@ -41,23 +41,21 @@ steps:
       - '--set-env-vars'
       - 'JWT_ISSUER=${_JWT_ISSUER},JWT_AUDIENCE=${_JWT_AUDIENCE},JWT_KID=${_JWT_KID},JWT_EXPIRES_IN=15m,JWKS_CACHE_MAX_AGE=300'
       - '--set-secrets'
-      - 'GOOGLE_PRIVATE_KEY_SECRET=auth-issuer-private-key-rsa:latest,TOKEN_API_KEY=jwks-token-api-key:latest'
+      - 'LOCAL_PRIVATE_KEY=auth-issuer-private-key-rsa:latest,TOKEN_API_KEY=jwks-token-api-key:latest'
       - '--max-instances'
       - '10'
       - '--min-instances'
-      - '1'
-      - '--port'
-      - '3100'
+      - '0'
       - '--memory'
       - '512Mi'
       - '--cpu'
       - '1'
       - '--timeout'
-      - '30'
+      - '60'
 
 images:
-  - 'gcr.io/$PROJECT_ID/jwks-service:$BUILD_ID'
-  - 'gcr.io/$PROJECT_ID/jwks-service:latest'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/blich-studio/jwks-service:$BUILD_ID'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/blich-studio/jwks-service:latest'
 
 substitutions:
   _REGION: europe-west1
