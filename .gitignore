@@ -58,3 +58,6 @@ service-account-key.json
 
 # Misc
 .cache/
+
+# Terraform
+.terraform/
