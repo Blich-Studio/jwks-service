@@ -21,7 +21,7 @@ data "terraform_remote_state" "shared" {
 }
 
 module "jwks_service" {
-  source = "../../terraform-modules/modules/cloud-run"
+  source = "../terraform-modules/modules/cloud-run"
 
   service_name    = "jwks-service"
   environment     = data.terraform_remote_state.shared.outputs.environment
