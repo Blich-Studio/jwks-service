@@ -12,7 +12,7 @@ const createConfig = (): AppConfig => ({
   kid: 'unit-test-kid',
   expiresIn: '5m',
   jwksCacheMaxAge: 60,
-  tokenApiKey: undefined,
+  tokenApiKey: 'test-key-1234567890123456789012345',
   googleSecretResource: undefined,
   localPrivateKey: PRIVATE_KEY,
   localPublicKey: PUBLIC_KEY,

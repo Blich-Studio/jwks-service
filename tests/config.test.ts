@@ -43,6 +43,16 @@ describe('loadConfig', () => {
     expect(config.tokenApiKey).toBe('test-key-1234567890123456789012345')
   })
 
+  it.each([undefined, '', 'short', ' '.repeat(32)])(
+    'rejects a missing or weak signing API key: %s',
+    key => {
+      setEnv()
+      if (key === undefined) delete process.env.TOKEN_API_KEY
+      else process.env.TOKEN_API_KEY = key
+      expect(() => loadConfig()).toThrow(/TOKEN_API_KEY/)
+    }
+  )
+
   it('throws when neither Secret Manager nor local pem pair is configured', () => {
     setEnv()
     delete process.env.LOCAL_PRIVATE_KEY

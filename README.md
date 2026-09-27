@@ -81,7 +81,7 @@ curl -X POST http://localhost:3100/token \
 | `JWT_KID` | Yes | Key ID for JWT header | - |
 | `JWT_EXPIRES_IN` | No | Token expiration time | `15m` |
 | `JWKS_CACHE_MAX_AGE` | No | JWKS cache duration (seconds) | `300` |
-| `TOKEN_API_KEY` | No | API key for /token endpoint protection | - |
+| `TOKEN_API_KEY` | Yes | API key for /token; at least 32 characters. Startup fails if missing. | - |
 | `LOCAL_PRIVATE_KEY` | Conditional | RSA private key (PEM format) | - |
 | `GOOGLE_PRIVATE_KEY_SECRET` | Conditional | Secret Manager resource path | - |
 
@@ -114,7 +114,7 @@ Returns the public key set for JWT verification.
 Issues a signed JWT token. Requires API key authentication.
 
 **Headers:**
-- `X-API-Key`: Your API key (if `TOKEN_API_KEY` is configured)
+- `X-API-Key`: Your required API key
 - `Content-Type`: `application/json`
 
 **Request Body:**

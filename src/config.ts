@@ -14,7 +14,7 @@ const BaseSchema = z.object({
   JWT_KID: z.string().min(1),
   JWT_EXPIRES_IN: z.string().default('15m'),
   JWKS_CACHE_MAX_AGE: z.coerce.number().default(300),
-  TOKEN_API_KEY: z.string().min(32, 'TOKEN_API_KEY must be at least 32 characters').optional(),
+  TOKEN_API_KEY: z.string().trim().min(32, 'TOKEN_API_KEY must be at least 32 characters'),
   GOOGLE_PRIVATE_KEY_SECRET: z.string().optional(),
   LOCAL_PRIVATE_KEY: z.string().optional(),
   LOCAL_PUBLIC_KEY: z.string().optional(),
@@ -27,7 +27,7 @@ export interface AppConfig {
   kid: string
   expiresIn: string
   jwksCacheMaxAge: number
-  tokenApiKey?: string
+  tokenApiKey: string
   googleSecretResource?: string
   localPrivateKey?: string
   localPublicKey?: string
