@@ -29,7 +29,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@blich-studio/eslint-config": "^1.4.0",
+    "@blich-studio/eslint-config": "file:./vendor/eslint-config",
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
     "@types/node": "^22.10.7",

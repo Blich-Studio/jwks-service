@@ -3,11 +3,10 @@
 FROM oven/bun:1.3.5-alpine AS builder
 WORKDIR /app
 
-COPY package.json bun.lock* .npmrc ./
+COPY package.json bun.lock* ./
+COPY vendor/eslint-config ./vendor/eslint-config
 
-
-RUN --mount=type=secret,id=npm_token,required=true \
-    NPM_TOKEN="$(cat /run/secrets/npm_token)" bun install --frozen-lockfile
+RUN bun install --frozen-lockfile
 
 COPY . .
 
@@ -18,11 +17,10 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-COPY package.json bun.lock* .npmrc ./
+COPY package.json bun.lock* ./
+COPY vendor/eslint-config ./vendor/eslint-config
 
-
-RUN --mount=type=secret,id=npm_token,required=true \
-    NPM_TOKEN="$(cat /run/secrets/npm_token)" bun install --frozen-lockfile --production
+RUN bun install --frozen-lockfile --production
 
 COPY --from=builder /app/dist ./dist
 

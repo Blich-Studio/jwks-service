@@ -2,6 +2,13 @@
 
 A production-ready JWT issuer service that provides JWKS (JSON Web Key Set) endpoints and token generation capabilities. Built with Fastify and deployed on Google Cloud Run.
 
+## Dependency installation
+
+Builds and CI use public npm dependencies plus the bundled
+[`@blich-studio/eslint-config` 1.4.0](vendor/eslint-config/README.md).
+No GitHub Packages token or subscription is required. Use Bun 1.3.5 and
+`bun install --frozen-lockfile` to reproduce the checked-in dependency graph.
+
 ## Features
 
 - 🔐 **JWT Token Issuing**: Generate RS256-signed JWT tokens with customizable claims
