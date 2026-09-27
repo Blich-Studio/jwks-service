@@ -5,10 +5,9 @@ WORKDIR /app
 
 COPY package.json bun.lock* .npmrc ./
 
-ARG NPM_TOKEN
-ENV NPM_TOKEN=${NPM_TOKEN}
 
-RUN bun install --frozen-lockfile
+RUN --mount=type=secret,id=npm_token,required=true \
+    NPM_TOKEN="$(cat /run/secrets/npm_token)" bun install --frozen-lockfile
 
 COPY . .
 
@@ -21,10 +20,9 @@ ENV NODE_ENV=production
 
 COPY package.json bun.lock* .npmrc ./
 
-ARG NPM_TOKEN
-ENV NPM_TOKEN=${NPM_TOKEN}
 
-RUN bun install --frozen-lockfile --production
+RUN --mount=type=secret,id=npm_token,required=true \
+    NPM_TOKEN="$(cat /run/secrets/npm_token)" bun install --frozen-lockfile --production
 
 COPY --from=builder /app/dist ./dist
 
