@@ -22,41 +22,17 @@ export const registerTokenRoute = (
   config: AppConfig
 ): void => {
   app.post('/token', async (request, reply) => {
-    if (config.tokenApiKey) {
-      const rawHeader = request.headers['x-api-key']
-      const providedKey = Array.isArray(rawHeader) ? rawHeader[0] : rawHeader
+    const rawHeader = request.headers['x-api-key']
+    const providedKey = Array.isArray(rawHeader) ? rawHeader[0] : rawHeader
+    const providedDigest = crypto
+      .createHash('sha256')
+      .update(providedKey ?? '')
+      .digest()
+    const expectedDigest = crypto.createHash('sha256').update(config.tokenApiKey).digest()
 
-      // DEBUG logging
-      app.log.info({
-        hasTokenApiKey: !!config.tokenApiKey,
-        tokenApiKeyLength: config.tokenApiKey?.length,
-        hasProvidedKey: !!providedKey,
-        providedKeyLength: providedKey?.length,
-      })
-
-      // Use a timing-safe comparison to avoid leaking API key validity via response timing.
-      // Hash both values to a fixed length and compare digests with crypto.timingSafeEqual.
-      const providedDigest = crypto
-        .createHash('sha256')
-        .update(providedKey ?? '')
-        .digest()
-      const expectedDigest = crypto.createHash('sha256').update(config.tokenApiKey).digest()
-
-      let authorized = false
-      try {
-        authorized = crypto.timingSafeEqual(providedDigest, expectedDigest)
-      } catch (_err) {
-        // timingSafeEqual throws if buffers are of different lengths; hashes are same length so shouldn't occur,
-        // but defensively treat as unauthorized on error.
-        authorized = false
-      }
-
-      app.log.info({ authorized })
-
-      if (!authorized) {
-        reply.code(401)
-        return { error: 'Unauthorized' }
-      }
+    if (!providedKey || !crypto.timingSafeEqual(providedDigest, expectedDigest)) {
+      reply.code(401)
+      return { error: 'Unauthorized' }
     }
 
     const parsed = tokenRequestSchema.safeParse(request.body)

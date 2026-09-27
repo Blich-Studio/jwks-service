@@ -73,6 +73,17 @@ describe('Fastify routes', () => {
     expect(response.statusCode).toBe(401)
   })
 
+  it('rejects an incorrect signing key', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/token',
+      headers: { 'x-api-key': 'incorrect-key' },
+      payload: { sub: '123', role: 'admin' },
+    })
+    expect(response.statusCode).toBe(401)
+    expect(response.json()).not.toHaveProperty('token')
+  })
+
   it('issues JWTs when API key is provided', async () => {
     const payload = {
       sub: 'user-55',
