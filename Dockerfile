@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.5
 
-FROM oven/bun:1-alpine AS builder
+FROM oven/bun:1.3.5-alpine AS builder
 WORKDIR /app
 
 COPY package.json bun.lock* .npmrc ./
@@ -13,7 +13,7 @@ COPY . .
 
 RUN bun run build
 
-FROM oven/bun:1-alpine AS production
+FROM oven/bun:1.3.5-alpine AS production
 WORKDIR /app
 
 ENV NODE_ENV=production
